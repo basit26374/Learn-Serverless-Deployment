@@ -1,0 +1,30 @@
+{
+    "dev": {
+        "app_function": "counter_app.init_lambda.app",
+        "aws_region": "eu-north-1",
+        "profile_name": "aws-dev",
+        "project_name": "counter-app",
+        "runtime": "python3.7",
+        "s3_bucket": "learn-zappa-serverless",
+        "environment_variables": {
+            "AWS_REGION_NAME": "eu-north-1",
+            "COUNT_VALUE": "0",
+            "SNS_TOPIC_SEND_COUNTER_VALUE": "arn:aws:sns:eu-north-1:068414940364:Send-CounterValue"
+        },
+        "events": [
+            {
+                "function": "counter_app.schedulers.schedulers.increment",
+                "kwargs": {},
+                "expression": "rate(1 minute)"
+            },
+            {
+                "function": "counter_app.handlers.decrement.decrement_handler",
+                "event_source": {
+                    "arn": "arn:aws:sqs:eu-north-1:068414940364:CounterValue-Queue",
+                    "batch_size": 1,
+                    "enabled": true
+                }
+            }
+        ]
+    }
+}
