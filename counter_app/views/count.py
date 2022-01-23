@@ -5,6 +5,7 @@ import time
 import os
 import logging
 from counter_app.utils.aws import send_sns_topic
+from counter_app.utils.send_bulk import send_bulk_emails
 
 class GetCount(Resource):
 
@@ -69,26 +70,12 @@ class SendCount(Resource):
 class SendBulkCount(Resource):
     
     def post(self):
-        '''
-        This endpoint not work due to 30 secs blocking code
-        Getting this error when we called POST Endpoint: {"message": "Endpoint request timed out"}
-        
-        To resolve this issue, see the same code block in 'advance' git branch
-        '''
         logging.info('==== Send Bulk Counter value to SNS Topic ====')
 
-        counter_value = int(os.environ.get('COUNT_VALUE'))
-
-        message = f'Counter Value : {counter_value}'
-        time.sleep(30)
-
-        for num in range(1,11):
-
-            subject = f'Bulk Counter Value updates {num}'
-            send_sns_topic(message, subject)
+        send_bulk_emails()
 
         output = {
-            'message': f'Bulk counter value {counter_value} send to SNS Topic',
+            'message': f'Bulk counter value send to SNS Topic asynchronously',
             'status_code': 201
         }
 

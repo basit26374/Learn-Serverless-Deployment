@@ -6,6 +6,7 @@
         "project_name": "counter-app",
         "runtime": "python3.7",
         "s3_bucket": "learn-zappa-serverless",
+        "timeout_seconds": 60,
         "environment_variables": {
             "AWS_REGION_NAME": "eu-north-1",
             "COUNT_VALUE": "0",
