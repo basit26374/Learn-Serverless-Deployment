@@ -1,11 +1,13 @@
-from flask import request, jsonify
+from flask import make_response, abort, url_for, redirect, request, jsonify
 from flask_restful import Resource
 from flask_restful.utils import cors
 import time
 import os
 import logging
+from zappa.asynchronous import get_async_response
+from counter_app.views import count_api
 from counter_app.utils.aws import send_sns_topic
-from counter_app.utils.send_bulk import send_bulk_emails
+from counter_app.utils.send_bulk import send_bulk_emails, generate_counter_value
 
 class GetCount(Resource):
 
@@ -81,3 +83,31 @@ class SendBulkCount(Resource):
 
         return output, 201
 
+
+class GenerateRandomCount(Resource):
+    
+    def get(self):
+        logging.info('==== Request random value for Counter ====')
+
+        x = generate_counter_value()
+
+        return redirect(count_api.url_for(Response, response_id=x.response_id))
+
+
+class Response(Resource):
+
+    def get(self, response_id):
+        response = get_async_response(response_id)
+        if response is None:
+            abort(404)
+
+        if response['status'] == 'complete':
+            return jsonify(response['response'])
+
+        time.sleep(5)
+
+        return "Not yet ready. Redirecting.", 302, {
+            'Content-Type': 'text/plain; charset=utf-8',
+            'Location': count_api.url_for(Response, response_id=x.response_id, backoff=5),
+            'X-redirect-reason': "Not yet ready.",
+        }

@@ -7,6 +7,7 @@
         "runtime": "python3.7",
         "s3_bucket": "learn-zappa-serverless",
         "timeout_seconds": 60,
+        "async_response_table": "Counter_app_db",
         "environment_variables": {
             "AWS_REGION_NAME": "eu-north-1",
             "COUNT_VALUE": "0",

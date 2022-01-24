@@ -1,6 +1,7 @@
 import os
 import logging
 import time
+import random
 from zappa.asynchronous import task
 from counter_app.utils.aws import send_sns_topic
 
@@ -16,3 +17,14 @@ def send_bulk_emails():
 
         subject = f'Bulk Counter Value updates {num}'
         send_sns_topic(message, subject)
+
+
+@task(capture_response=True)
+def generate_counter_value():
+    logging.info('==== Generate random value ====')
+
+    counter_value = random.randint(1,200)
+
+    time.sleep(10)
+
+    return {'MESSAGE': "It generate {} for counter value".format(counter_value)}
