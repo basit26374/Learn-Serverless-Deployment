@@ -7,7 +7,7 @@ import logging
 from zappa.asynchronous import get_async_response
 from counter_app.views import count_api
 from counter_app.utils.aws import send_sns_topic
-from counter_app.utils.send_bulk import send_bulk_emails, generate_counter_value
+from counter_app.utils.send_bulk import send_bulk_emails, generate_counter_value, UnhandledError
 
 class GetCount(Resource):
 
@@ -111,3 +111,12 @@ class Response(Resource):
             'Location': count_api.url_for(Response, response_id=x.response_id, backoff=5),
             'X-redirect-reason': "Not yet ready.",
         }
+
+
+class UnhandledException(Resource):
+
+    def get(self):
+
+        UnhandledError()
+
+        return "Something goes wrong in Async task", 500

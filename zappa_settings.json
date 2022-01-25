@@ -13,6 +13,7 @@
             "COUNT_VALUE": "0",
             "SNS_TOPIC_SEND_COUNTER_VALUE": "arn:aws:sns:eu-north-1:068414940364:Send-CounterValue"
         },
+        "dead_letter_arn": "arn:aws:sns:eu-north-1:068414940364:UnhandledException-Counter-app",
         "events": [
             {
                 "function": "counter_app.schedulers.schedulers.increment",

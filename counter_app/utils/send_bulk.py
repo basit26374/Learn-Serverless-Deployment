@@ -28,3 +28,9 @@ def generate_counter_value():
     time.sleep(10)
 
     return {'MESSAGE': "It generate {} for counter value".format(counter_value)}
+
+
+@task
+def UnhandledError():
+
+    raise ValueError("Async Failure Exception")
